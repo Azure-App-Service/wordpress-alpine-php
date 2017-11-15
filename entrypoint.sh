@@ -52,7 +52,7 @@ setup_wordpress(){
 	test ! -d "$WORDPRESS_HOME" && echo "INFO: $WORDPRESS_HOME not found. creating ..." && mkdir -p "$WORDPRESS_HOME"
 
 	cd $WORDPRESS_SOURCE
-	tar -xf wordpress.tar.gz -C $WORDPRESS_HOME/ --strip-components=1
+	tar -xf wp.tar.gz -C $WORDPRESS_HOME/ --strip-components=1
 	
 	chown -R www-data:www-data $WORDPRESS_HOME 
     cd $WORDPRESS_HOME

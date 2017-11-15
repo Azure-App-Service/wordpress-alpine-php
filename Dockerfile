@@ -9,7 +9,6 @@ MAINTAINER Azure App Service Container Images <appsvc-images@microsoft.com>
 # ========
 
 # wordpress
-ENV WORDPRESS_DOWNLOAD_URL "https://wordpress.org/latest.tar.gz"
 ENV WORDPRESS_SOURCE "/usr/src/wordpress"
 ENV WORDPRESS_HOME "/home/site/wwwroot"
 
@@ -26,13 +25,6 @@ ENV DOCKER_BUILD_HOME "/dockerbuild"
 WORKDIR $DOCKER_BUILD_HOME
 RUN set -ex \
 	# --------
-        # ~ tools
-	# --------
-
-	&& apk add --update \
-	     wget \
-
-	# --------
 	# 1. redis
 	# --------
         && apk add --update redis \
@@ -41,8 +33,7 @@ RUN set -ex \
 	# 2. wordpress
 	# ------------
 	&& mkdir -p $WORDPRESS_SOURCE \
-	&& cd $WORDPRESS_SOURCE \
-	&& wget -O wordpress.tar.gz "$WORDPRESS_DOWNLOAD_URL" --no-check-certificate \ 	
+        # cp in final
 	
 	# ----------
 	# ~. clean up
@@ -64,6 +55,7 @@ RUN set -ex \
 # =====
 # final
 # =====
+COPY wp.tar.gz $WORDPRESS_SOURCE/
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 EXPOSE 2222 80
