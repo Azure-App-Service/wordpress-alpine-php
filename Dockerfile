@@ -1,7 +1,7 @@
 #
 # Dockerfile for WordPress
 #
-FROM leonzhang77/apm:master
+FROM appsvcorg/alpine-php-mysql:0.1 
 MAINTAINER Azure App Service Container Images <appsvc-images@microsoft.com>
 
 # ========
