@@ -29,16 +29,16 @@ $connectstr_dbusername = getenv('DATABASE_USERNAME');;
 $connectstr_dbpassword = getenv('DATABASE_PASSWORD');
 
 
-define('DB_NAME', getenv('DATABASE_NAME'));
+define('DB_NAME', $connectstr_dbname);
 
 /** MySQL database username */
-define('DB_USER', getenv('DATABASE_USERNAME'));
+define('DB_USER', $connectstr_dbusername);
 
 /** MySQL database password */
-define('DB_PASSWORD',getenv('DATABASE_PASSWORD'));
+define('DB_PASSWORD',$connectstr_dbpassword);
 
 /** MySQL hostname */
-define('DB_HOST', getenv('DATABASE_HOST'));
+define('DB_HOST', $connectstr_dbhost);
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');

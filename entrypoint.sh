@@ -54,25 +54,19 @@ setup_wordpress(){
 	cd $WORDPRESS_SOURCE
 	tar -xf wp.tar.gz -C $WORDPRESS_HOME/ --strip-components=1
 	
-	chown -R www-data:www-data $WORDPRESS_HOME 
-    cd $WORDPRESS_HOME
-    rm -rf $WORDPRESS_SOURCE
+	chown -R www-data:www-data $WORDPRESS_HOME
+    
 }
 
 update_wordpress_config(){	
-	DATABASE_HOST=${DATABASE_HOST:-localhost}
-	WORDPRESS_DATABASE_NAME=${WORDPRESS_DATABASE_NAME:-azurelocaldb}
-	WORDPRESS_DATABASE_USERNAME=${WORDPRESS_DATABASE_USERNAME:-wordpress}
-	WORDPRESS_DATABASE_PASSWORD=${WORDPRESS_DATABASE_PASSWORD:-MS173m_QN}
-	WORDPRESS_TABLE_NAME_PREFIX=${WORDPRESS_TABLE_NAME_PREFIX:-wp_}
-
-	DATABASE_USERNAME=${DATABASE_USERNAME:-phpmyadmin}
-    DATABASE_PASSWORD=${DATABASE_PASSWORD:-MS173m_QN}
     
-	DATABASE_HOST=$(echo ${DATABASE_HOST}|tr '[A-Z]' '[a-z]')
-	if [ "${DATABASE_HOST}" == "localhost" ]; then
-		export DATABASE_HOST="localhost"
-	fi
+	DATABASE_HOST=${DATABASE_HOST:-localhost}
+	DATABASE_NAME=${DATABASE_NAME:-azurelocaldb}
+	# if DATABASE_USERNAME equal phpmyadmin, it means it's nothing at beginning.
+	if [ "${DATABASE_USERNAME}" == "phpmyadmin" ]; then
+	    DATABASE_USERNAME='wordpress'
+	fi	
+	DATABASE_PASSWORD=${DATABASE_PASSWORD:-MS173m_QN}   
 }
 
 load_wordpress(){
@@ -133,22 +127,21 @@ if [ ! -e "$WORDPRESS_HOME/wp-config.php" ]; then
         echo "INFO: ++++++++++++++++++++++++++++++++++++++++++++++++++:"
         echo "INFO: WORDPRESS_ENVS:"
         echo "INFO: DATABASE_HOST:" $DATABASE_HOST
-        echo "INFO: WORDPRESS_DATABASE_NAME:" $WORDPRESS_DATABASE_NAME
-        echo "INFO: WORDPRESS_DATABASE_USERNAME:" $WORDPRESS_DATABASE_USERNAME
-        echo "INFO: WORDPRESS_DATABASE_PASSWORD:" $WORDPRESS_DATABASE_PASSWORD	
-        echo "INFO: WORDPRESS_TABLE_NAME_PREFIX:" $WORDPRESS_TABLE_NAME_PREFIX
+        echo "INFO: WORDPRESS_DATABASE_NAME:" $DATABASE_NAME
+        echo "INFO: WORDPRESS_DATABASE_USERNAME:" $DATABASE_USERNAME
+        echo "INFO: WORDPRESS_DATABASE_PASSWORD:" $DATABASE_PASSWORD	        
         echo "INFO: ++++++++++++++++++++++++++++++++++++++++++++++++++:"
         echo "Creating database for WordPress if not exists ..."
-        mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`$WORDPRESS_DATABASE_NAME\` CHARACTER SET utf8 COLLATE utf8_general_ci;"
-        echo "Granting user for WordPress ..."
-	    mysql -u root -e "GRANT ALL ON \`$WORDPRESS_DATABASE_NAME\`.* TO \`$WORDPRESS_DATABASE_USERNAME\`@\`$DATABASE_HOST\` IDENTIFIED BY '$WORDPRESS_DATABASE_PASSWORD' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-    
+	    mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`$DATABASE_NAME\` CHARACTER SET utf8 COLLATE utf8_general_ci;"
+	    echo "Granting user for WordPress ..."
+	    mysql -u root -e "GRANT ALL ON \`$DATABASE_NAME\`.* TO \`$DATABASE_USERNAME\`@\`$DATABASE_HOST\` IDENTIFIED BY '$DATABASE_PASSWORD'; FLUSH PRIVILEGES;"
+	
         cd $WORDPRESS_HOME 
-	    cp wp-config-sample.php wp-config.php && chmod 777 wp-config.php && chown -R www-data:www-data wp-config.php
-        sed -i "s/database_name_here/${WORDPRESS_DATABASE_NAME}/g" wp-config.php
-        sed -i "s/username_here/${WORDPRESS_DATABASE_USERNAME}/g" wp-config.php
-        sed -i "s/password_here/${WORDPRESS_DATABASE_PASSWORD}/g" wp-config.php
-        sed -i "s/wp_/${WORDPRESS_TABLE_NAME_PREFIX}/g" wp-config.php
+		cp $WORDPRESS_SOURCE/wp-config.php . && chmod 777 wp-config.php && chown -R www-data:www-data wp-config.php
+        sed -i "s/getenv('DATABASE_NAME')/${DATABASE_NAME}/g" wp-config.php
+        sed -i "s/getenv('DATABASE_USERNAME')/${DATABASE_USERNAME}/g" wp-config.php
+        sed -i "s/getenv('DATABASE_PASSWORD')/${DATABASE_PASSWORD}/g" wp-config.php
+        sed -i "s/getenv('DATABASE_HOST')/${DATABASE_HOST}/g" wp-config.php
 
         echo "Starting local Redis ..."
         redis-server --daemonize yes
@@ -160,6 +153,8 @@ fi
 
 echo "Loading WordPress conf ..."
 load_wordpress
+cd $WORDPRESS_HOME 
+rm -rf $WORDPRESS_SOURCE
 
 echo "Starting SSH ..."
 rc-service sshd start
