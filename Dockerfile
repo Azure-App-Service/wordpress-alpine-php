@@ -56,7 +56,8 @@ RUN set -ex \
 # final
 # =====
 COPY wp.tar.gz $WORDPRESS_SOURCE/
-COPY wp-config.php $WORDPRESS_HOME/
+COPY wp-config.php $WORDPRESS_SOURCE/
+
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 EXPOSE 2222 80
