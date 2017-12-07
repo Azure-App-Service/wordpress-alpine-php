@@ -4,7 +4,7 @@ This is a WordPress Docker image which can run on both [Azure Web App on Linux](
 ## Components
 This docker image currently contains the following components:
 
-1. WordPress    
+1. WordPress (4.9.1)   
 2. Alpine
 3. PHP 
 4. Phpmyadmin ( if using Local Database )
