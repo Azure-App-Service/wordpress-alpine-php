@@ -28,7 +28,9 @@ DATABASE_USERNAME | wordpress
 DATABASE_PASSWORD | some-string
 
 4. Browse your site 
-5. Complete WordPress install and Enter the Credentials for Azure database for MySQL 
+5. Complete WordPress install
+
+**Note: Do not use the app setting DATABASE_TYPE=local if using Azure database for MySQL **
 
 
 ## Limitations
