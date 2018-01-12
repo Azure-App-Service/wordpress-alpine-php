@@ -26,6 +26,7 @@ Name | Default Value
 DATABASE_TYPE | local
 DATABASE_USERNAME | wordpress
 DATABASE_PASSWORD | some-string
+**Note: We create a database "azurelocaldb" when using local mysql . Hence use this name when setting up the app **
 
 4. Browse your site 
 5. Complete WordPress install
