@@ -28,13 +28,11 @@ RUN set -ex \
 	# 1. redis
 	# --------
         && apk add --update redis \
-
 	# ------------	
 	# 2. wordpress
 	# ------------
 	&& mkdir -p $WORDPRESS_SOURCE \
         # cp in final
-	
 	# ----------
 	# ~. clean up
 	# ----------
