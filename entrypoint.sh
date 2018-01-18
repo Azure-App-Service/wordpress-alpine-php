@@ -76,10 +76,16 @@ load_wordpress(){
 }
 
 test ! -d "$APP_HOME" && echo "INFO: $APP_HOME not found. creating..." && mkdir -p "$APP_HOME"
-chown -R www-data:www-data $APP_HOME
+if [ ! $WEBSITES_ENABLE_APP_SERVICE_STORAGE ]; then 
+    echo "INFO: NOT in Azure, chown for "$APP_HOME 
+    chown -R www-data:www-data $APP_HOME
+fi
 
 test ! -d "$HTTPD_LOG_DIR" && echo "INFO: $HTTPD_LOG_DIR not found. creating..." && mkdir -p "$HTTPD_LOG_DIR"
-chown -R www-data:www-data $HTTPD_LOG_DIR
+if [ ! $WEBSITES_ENABLE_APP_SERVICE_STORAGE ]; then 
+    echo "INFO: NOT in Azure, chown for "$HTTPD_LOG_DIR 
+    chown -R www-data:www-data $HTTPD_LOG_DIR
+fi
 
 echo "Setup openrc ..." && openrc && touch /run/openrc/softlevel
 
