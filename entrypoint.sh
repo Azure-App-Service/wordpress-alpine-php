@@ -159,8 +159,9 @@ fi
 
 echo "Loading WordPress conf ..."
 load_wordpress
-cd $WORDPRESS_HOME 
-rm -rf $WORDPRESS_SOURCE
+# retain wp files in order to copy them AFTER deployed the 
+# cd $WORDPRESS_HOME 
+# rm -rf $WORDPRESS_SOURCE
 
 echo "Starting SSH ..."
 rc-service sshd start
