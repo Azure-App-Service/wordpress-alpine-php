@@ -1,3 +1,5 @@
+# This repo is not being monitored and managed. The images available in this repo are outdated and no longer maintained and if youa are looking for WordPress on Azure App Service then we recommend to refer this [Repository](https://github.com/Azure/wordpress-linux-appservice) 
+
 # Wordpress-alpine-php Docker Image 
 This is a WordPress Docker image which can run on both [Azure Web App on Linux](https://docs.microsoft.com/en-us/azure/app-service-web/app-service-linux-intro) and your Docker engines's host.
 
